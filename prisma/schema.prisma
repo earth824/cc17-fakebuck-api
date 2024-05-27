@@ -1,0 +1,82 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  firstName    String
+  lastName     String
+  email        String?  @unique
+  mobile       String?  @unique
+  password     String
+  profileImage String?
+  coverImage   String?
+  createdAt    DateTime @default(now()) @db.Timestamp(0)
+  updatedAt    DateTime @updatedAt @db.Timestamp(0)
+
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  senders   Relationship[] @relation(name: "sender")
+  receivers Relationship[] @relation(name: "receiver")
+}
+
+model Post {
+  id        Int       @id @default(autoincrement())
+  message   String?   @db.Text
+  image     String?
+  createdAt DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt DateTime  @updatedAt @db.Timestamp(0)
+  deletedAt DateTime? @db.Timestamp(0)
+  userId    Int
+
+  user     User      @relation(fields: [userId], references: [id])
+  comments Comment[]
+  likes    Like[]
+}
+
+model Comment {
+  id        Int       @id @default(autoincrement())
+  message   String
+  createdAt DateTime  @default(now()) @db.Timestamp(0)
+  updatedAt DateTime  @updatedAt @db.Timestamp(0)
+  deletedAt DateTime? @db.Timestamp(0)
+  userId    Int
+  postId    Int
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+}
+
+model Like {
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  userId    Int
+  postId    Int
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@id([userId, postId])
+}
+
+enum RelationshipStatus {
+  PENDING
+  ACCEPTED
+}
+
+model Relationship {
+  id         Int                @id @default(autoincrement())
+  status     RelationshipStatus @default(PENDING)
+  createdAt  DateTime           @default(now()) @db.Timestamp(0)
+  updatedAt  DateTime           @updatedAt @db.Timestamp(0)
+  senderId   Int
+  receiverId Int
+
+  sender   User @relation(name: "sender", fields: [senderId], references: [id])
+  receiver User @relation(name: "receiver", fields: [receiverId], references: [id])
+}
