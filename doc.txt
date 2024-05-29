@@ -20,3 +20,13 @@ RESPONSE
   200 accessToken
   400 message
   500 message
+
+--- GET AUTHENTICATED USER
+GET /auth/me
+HEADER
+  Authorization Bearer access_token
+RESPONSE
+  200 user
+  400 message
+  401 message
+  500 message
