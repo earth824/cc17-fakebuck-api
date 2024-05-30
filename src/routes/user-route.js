@@ -1,6 +1,9 @@
 const express = require('express');
 const upload = require('../middlewares/upload');
 const userController = require('../controllers/user-controller');
+const {
+  validateUpdateProfileOrCoverImage
+} = require('../middlewares/validator');
 
 const userRouter = express.Router();
 
@@ -10,6 +13,7 @@ userRouter.patch(
     { name: 'profileImage', maxCount: 1 },
     { name: 'coverImage', maxCount: 1 }
   ]),
+  validateUpdateProfileOrCoverImage,
   userController.updateProfileOrCoverImage
 );
 
