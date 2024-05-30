@@ -30,3 +30,16 @@ RESPONSE
   400 message
   401 message
   500 message
+
+--- UPLOAD PROFILE IMAGE OR COVER IMAGE
+PATCH /users
+HEADER
+  Authorization Bearer access_token
+BODY (multipart/form-data)
+  profileImage
+  coverImage
+RESPONSE
+  200 profileImage, coverImage
+  400 message
+  401 message
+  500 message
