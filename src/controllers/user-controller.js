@@ -1,3 +1,5 @@
+const fs = require('fs/promises');
+
 const uploadService = require('../services/upload-service');
 const userService = require('../services/user-service');
 
@@ -32,6 +34,13 @@ userController.updateProfileOrCoverImage = async (req, res, next) => {
     res.status(200).json(data);
   } catch (err) {
     next(err);
+  } finally {
+    if (req.files.profileImage) {
+      fs.unlink(req.files.profileImage[0].path);
+    }
+    if (req.files.coverImage) {
+      fs.unlink(req.files.coverImage[0].path);
+    }
   }
 };
 
