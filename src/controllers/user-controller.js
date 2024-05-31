@@ -5,15 +5,27 @@ const userController = {};
 
 userController.updateProfileOrCoverImage = async (req, res, next) => {
   try {
-    const data = {};
+    const promises = [];
+
     if (req.files.profileImage) {
-      data.profileImage = req.files.profileImage[0].path;
-      const result = await uploadService.upload(req.files.profileImage[0].path);
-      console.log(result);
+      const result = uploadService
+        .upload(req.files.profileImage[0].path)
+        .then(url => ({ url, key: 'profileImage' }));
+      promises.push(result);
     }
     if (req.files.coverImage) {
-      data.coverImage = req.files.coverImage[0].path;
+      const result = uploadService
+        .upload(req.files.coverImage[0].path)
+        .then(url => ({ url, key: 'coverImage' }));
+      promises.push(result);
     }
+
+    const result = await Promise.all(promises);
+
+    const data = result.reduce((acc, el) => {
+      acc[el.key] = el.url;
+      return acc;
+    }, {});
 
     await userService.updateUserById(data, req.user.id);
 
