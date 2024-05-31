@@ -17,4 +17,6 @@ userRouter.patch(
   userController.updateProfileOrCoverImage
 );
 
+userRouter.get('/:profileId', userController.getProfileUser);
+
 module.exports = userRouter;

@@ -2,6 +2,8 @@ const fs = require('fs/promises');
 
 const uploadService = require('../services/upload-service');
 const userService = require('../services/user-service');
+const createError = require('../utils/create-error');
+const relationshipService = require('../services/relationship-service');
 
 const userController = {};
 
@@ -41,6 +43,32 @@ userController.updateProfileOrCoverImage = async (req, res, next) => {
     if (req.files.coverImage) {
       fs.unlink(req.files.coverImage[0].path);
     }
+  }
+};
+
+userController.getProfileUser = async (req, res, next) => {
+  // profileId ===> +req.params.profileId
+  // authUserId ===> req.user.id
+  try {
+    const profileUser = await userService.findUserById(+req.params.profileId);
+    if (!profileUser) {
+      createError({
+        message: 'this profile user was not found',
+        statusCode: 400
+      });
+    }
+
+    delete profileUser.password;
+
+    const relationshipToAuthUser =
+      await relationshipService.findUserARelationToUserB(
+        +req.params.profileId,
+        req.user.id
+      );
+
+    res.status(200).json({ user: profileUser, relationshipToAuthUser });
+  } catch (err) {
+    next(err);
   }
 };
 

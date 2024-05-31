@@ -43,3 +43,25 @@ RESPONSE
   400 message
   401 message
   500 message
+
+--- GET USER PROFILE
+GET /users/:profileId
+HEADER
+  Authorization Bearer access_token
+RESPONSE
+  200 profileUser
+  400 message
+  401 message
+  500 message
+
+--- REQUEST FRIEND
+POST /relationships/users/:receiverId
+HEADER
+  Authorization Bearer access_token
+RESPONSE
+  200 message
+  400 message
+  401 message
+  500 message
+
+--- CANCEL REQUEST FREIND
