@@ -86,4 +86,18 @@ relationshipService.updateRelationshipById = (status, id) =>
 relationshipService.deleteRelationshipById = id =>
   prisma.relationship.delete({ where: { id } });
 
+// SELECT * FROM relationships WHERE status = 'ACCEPTED' AND (senderId = 3 OR receiverId = 3)
+relationshipService.findFriendIdListByTargetUserId = async targetUserId => {
+  const relationships = await prisma.relationship.findMany({
+    where: {
+      status: RELATIONSHIP_STATUS.ACCEPTED,
+      OR: [{ senderId: targetUserId }, { receiverId: targetUserId }]
+    }
+  });
+  const friendIdList = relationships.map(el =>
+    el.senderId === targetUserId ? el.receiverId : el.senderId
+  );
+  console.log(friendIdList);
+};
+
 module.exports = relationshipService;

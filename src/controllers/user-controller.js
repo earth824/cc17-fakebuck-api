@@ -66,6 +66,8 @@ userController.getProfileUser = async (req, res, next) => {
         req.user.id
       );
 
+    relationshipService.findFriendIdListByTargetUserId(+req.params.profileId);
+
     res.status(200).json({ user: profileUser, relationshipToAuthUser });
   } catch (err) {
     next(err);
