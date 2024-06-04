@@ -95,3 +95,16 @@ RESPONSE
   400 message
   401 message
   500 message
+
+--- CREATE POST
+POST /posts
+HEADER
+  Authorization Bearer access_token
+BODY {multipart/formdata}
+  message
+  image
+RESPONSE
+  201 message
+  400 message
+  401 message
+  500 message

@@ -3,6 +3,7 @@ const {
   RELATIONSHIP_STATUS
 } = require('../constants');
 const prisma = require('../models/prisma');
+const userService = require('./user-service');
 
 const relationshipService = {};
 
@@ -97,7 +98,14 @@ relationshipService.findFriendIdListByTargetUserId = async targetUserId => {
   const friendIdList = relationships.map(el =>
     el.senderId === targetUserId ? el.receiverId : el.senderId
   );
-  console.log(friendIdList);
+  return friendIdList;
+};
+
+relationshipService.findFriendsByTargetUserId = async targetUserId => {
+  const friendIdList = await relationshipService.findFriendIdListByTargetUserId(
+    targetUserId
+  );
+  return userService.findUserByIdList(friendIdList);
 };
 
 module.exports = relationshipService;
