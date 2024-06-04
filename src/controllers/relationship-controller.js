@@ -109,4 +109,52 @@ relationshipController.confirmRequest = async (req, res, next) => {
   }
 };
 
+relationshipController.rejectRequest = async (req, res, next) => {
+  try {
+    const existRelationship =
+      await relationshipService.findRelationshipBySenderIdReceiverIdAndStatus(
+        +req.params.senderId,
+        req.user.id,
+        RELATIONSHIP_STATUS.PENDING
+      );
+
+    if (!existRelationship) {
+      createError({
+        message: 'relationship did not exists',
+        statusCode: 400
+      });
+    }
+
+    await relationshipService.deleteRelationshipById(existRelationship.id);
+    res.status(204).json();
+  } catch (err) {
+    next(err);
+  }
+};
+
+relationshipController.unfriend = async (req, res, next) => {
+  try {
+    const existRelationship =
+      await relationshipService.findReleationshipBetweenUserAAndUserB(
+        +req.params.targetUserId,
+        req.user.id
+      );
+
+    if (
+      !existRelationship ||
+      existRelationship.status !== RELATIONSHIP_STATUS.ACCEPTED
+    ) {
+      createError({
+        message: 'relationship did not exists',
+        statusCode: 400
+      });
+    }
+
+    await relationshipService.deleteRelationshipById(existRelationship.id);
+    res.status(204).json();
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = relationshipController;

@@ -18,4 +18,14 @@ relationshipRouter.patch(
   relationshipController.confirmRequest
 );
 
+relationshipRouter.delete(
+  '/users/:senderId/reject',
+  relationshipController.rejectRequest
+);
+
+relationshipRouter.delete(
+  '/users/:targetUserId/unfriend',
+  relationshipController.unfriend
+);
+
 module.exports = relationshipRouter;

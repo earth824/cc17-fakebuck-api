@@ -75,3 +75,23 @@ RESPONSE
   400 message
   401 message
   500 message
+
+--- REJECT FRIEND REQUEST
+DELETE /relationships/users/:senderId/reject
+HEADER
+  Authorization Bearer access_token
+RESPONSE
+  204 message
+  400 message
+  401 message
+  500 message
+
+--- UNFRIEND
+DELETE /relationships/users/:targetUserId/unfriend
+HEADER
+  Authorization Bearer access_token
+RESPONSE
+  204 message
+  400 message
+  401 message
+  500 message

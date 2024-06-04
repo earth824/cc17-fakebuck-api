@@ -83,4 +83,7 @@ relationshipService.updateRelationshipById = (status, id) =>
     where: { id }
   });
 
+relationshipService.deleteRelationshipById = id =>
+  prisma.relationship.delete({ where: { id } });
+
 module.exports = relationshipService;
