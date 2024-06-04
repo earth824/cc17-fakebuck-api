@@ -13,4 +13,9 @@ relationshipRouter.delete(
   relationshipController.cancelRequest
 );
 
+relationshipRouter.patch(
+  '/users/:senderId',
+  relationshipController.confirmRequest
+);
+
 module.exports = relationshipRouter;

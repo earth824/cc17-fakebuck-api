@@ -65,3 +65,13 @@ RESPONSE
   500 message
 
 --- CANCEL REQUEST FREIND
+
+--- CONFIRM FRIEND REQUEST
+PATCH /relationships/users/:senderId
+HEADER
+  Authorization Bearer access_token
+RESPONSE
+  200 message
+  400 message
+  401 message
+  500 message

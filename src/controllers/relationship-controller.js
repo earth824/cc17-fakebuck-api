@@ -82,4 +82,31 @@ relationshipController.cancelRequest = async (req, res, next) => {
   }
 };
 
+relationshipController.confirmRequest = async (req, res, next) => {
+  try {
+    const existRelationship =
+      await relationshipService.findRelationshipBySenderIdReceiverIdAndStatus(
+        +req.params.senderId,
+        req.user.id,
+        RELATIONSHIP_STATUS.PENDING
+      );
+
+    if (!existRelationship) {
+      createError({
+        message: 'relationship did not exists',
+        statusCode: 400
+      });
+    }
+
+    await relationshipService.updateRelationshipById(
+      RELATIONSHIP_STATUS.ACCEPTED,
+      existRelationship.id
+    );
+
+    res.status(200).json({ message: 'request accepted' });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = relationshipController;

@@ -68,4 +68,19 @@ relationshipService.deleteRelationshipBySenderIdReceiverIdAndStatus = (
     where: { senderId, receiverId, status }
   });
 
+relationshipService.findRelationshipBySenderIdReceiverIdAndStatus = (
+  senderId,
+  receiverId,
+  status
+) =>
+  prisma.relationship.findFirst({
+    where: { senderId, receiverId, status }
+  });
+
+relationshipService.updateRelationshipById = (status, id) =>
+  prisma.relationship.update({
+    data: { status },
+    where: { id }
+  });
+
 module.exports = relationshipService;
